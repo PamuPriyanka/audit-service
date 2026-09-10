@@ -1,0 +1,5 @@
+- While executing scenario-a.md referred chatgpt (since no sensitive data is present) to generate sample payload for the given parameters
+- Utilised co-pilot auto complete in completing .md files
+- Utilising co-pilot auto-complete mode to generate the code
+- Utilised llm to generate the .md files 
+- Mostly used auto-complete mode to generating the code
