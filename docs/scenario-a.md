@@ -14,12 +14,8 @@ The audit records will be persisted in an H2 database and mapped to the `audit_e
 
 ## 1. POST API — Create Audit Record
 
-### Endpoint
-
-```text
 POST /audit/postRecord
 Content-Type: application/json
-```
 
 The API accepts the following parameters:
 
@@ -73,6 +69,10 @@ HTTP 400 Bad Request
 > `401 Unauthorized` is reserved for authentication-related failures. Security is explicitly out of scope for this scenario, so validation failures are handled as `400 Bad Request`.
 
 ---
+
+### Technical decisions
+1) Previous hash of teh first record is Genesis
+2) Previous hash in every record is (eventType|actorId|resourceType|resourceId|payload|timestamp)
 
 # 2. GET API — Query Audit Records
 
@@ -177,6 +177,9 @@ public ResponseEntity<Page<AuditEntity>> query(
 The service uses the repository layer to query only the records matching the supplied filters.
 
 ---
+
+# Technical decision
+1) Records from audit_events table are only returned not from the archive table
 
 # 3. GET API — Verify Audit Chain
 
@@ -399,10 +402,9 @@ This ensures that concurrent requests cannot independently create two records us
 
 ---
 
+# Technical decision
+1) Records from audit_events table and archived tables are also verified to maintain the chain
+
 ## Out of Scope
 
-1. Authentication and authorization.
-2. API security.
-3. User identity management.
-4. Audit record deletion/retention policies.
-5. Distributed deployment and Kubernetes-specific concerns.
+1. Security 

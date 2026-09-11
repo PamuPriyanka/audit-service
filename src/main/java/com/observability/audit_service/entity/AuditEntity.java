@@ -1,7 +1,9 @@
 package com.observability.audit_service.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +14,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@Builder
 public class AuditEntity {
 
     @Id
@@ -31,6 +34,7 @@ public class AuditEntity {
     private Long resourceId;
 
     @Column(columnDefinition = "TEXT", nullable = false)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String payload;
 
     @Column(nullable = false)
@@ -41,5 +45,9 @@ public class AuditEntity {
 
     @Column(nullable = false, length = 64)
     private String previousHash;
+
+    @Column(columnDefinition = "TEXT")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private String encryptedPayload;
 
 }
