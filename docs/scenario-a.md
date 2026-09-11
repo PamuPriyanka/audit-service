@@ -71,8 +71,10 @@ HTTP 400 Bad Request
 ---
 
 ### Technical decisions
-1) Previous hash of teh first record is Genesis
-2) Previous hash in every record is (eventType|actorId|resourceType|resourceId|payload|timestamp)
+1) Previous hash of the first record is Genesis
+2) Previous hash in every record is sha(eventType|actorId|resourceType|resourceId|payload|timestamp)
+3) SHA is chosen because it irreversible and cant be tampered
+4) While calculating hash record id, previous and current hash are excluded
 
 # 2. GET API — Query Audit Records
 
@@ -180,6 +182,7 @@ The service uses the repository layer to query only the records matching the sup
 
 # Technical decision
 1) Records from audit_events table are only returned not from the archive table
+2) Pagination initially contains 20 records which is a hardcoded value
 
 # 3. GET API — Verify Audit Chain
 
@@ -237,7 +240,7 @@ It then verifies that:
 ```text
 current record.previousHash
         ==
-previous record.currentHash
+previous sha(piped keys)
 ```
 
 ### Endpoint Implementation
@@ -403,7 +406,8 @@ This ensures that concurrent requests cannot independently create two records us
 ---
 
 # Technical decision
-1) Records from audit_events table and archived tables are also verified to maintain the chain
+1) Records from audit_events table and archived tables are also verified to maintain the chain.
+  But separated with appropriate messages.
 
 ## Out of Scope
 
